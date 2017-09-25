@@ -38,6 +38,10 @@
                             <input type="checkbox" name="copyimages" class="toggleswitch"
                                 data-on="Yes" checked="checked"
                                 data-off="No"><br>
+                            <hr>
+
+                            <label for="timeout" data-toggle="tooltip" title="When copying over posts and images from your site it may take awhile if you have a lot of data, set this to as high as you would like to prevent the script from timing out." data-placement="right">Max Timeout in Seconds <i class="voyager-info-circled"></i></label><br>
+                            <input type="text" name="timeout" class="form-control" value="900" >
                             <hr>    
 
 

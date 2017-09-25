@@ -18,6 +18,11 @@ class ImportController extends BaseController
 			$copyImages = true;
 		}
 
+		$timeout = 900;
+		if($request->timeout){
+			$timeout = $request->timeout;
+		}
+
 		if($request->hasFile('wpexport')){
 
 			$mimeType = $request->file('wpexport')->getMimeType();
@@ -36,7 +41,7 @@ class ImportController extends BaseController
 				
 				Storage::disk(config('voyager.storage.disk'))->put($folder . '/wordpress-import.xml', file_get_contents($request->file('wpexport')), 'public');
 				$xml_file = Storage::disk(config('voyager.storage.disk'))->url($folder . '/wordpress-import.xml');
-				$wp = new WordpressImport($xml_file, $copyImages);
+				$wp = new WordpressImport($xml_file, $copyImages, $timeout);
 
 				return redirect()->back()->with([
                     'message'    => 'Successfully Imported your WordPress Posts, Pages, Categories, and Users!',

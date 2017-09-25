@@ -18,15 +18,19 @@ class WordpressImport
 	public $pages;
 
 	public $copyImages = true;
-	public $secondsBeforeTimeout = 300;
+	public $secondsBeforeTimeout = 900;
 
-	function __construct($wpXML, $copyImages)
+	function __construct($wpXML, $copyImages, $secondsBeforeTimeout = 900)
 	{
 		set_time_limit($this->secondsBeforeTimeout);
+		ini_set('max_execution_time', $this->secondsBeforeTimeout);
+		ini_set('default_socket_timeout', $this->secondsBeforeTimeout);
 		$this->wpXML = simplexml_load_file($wpXML, 'SimpleXMLElement', LIBXML_NOCDATA);
 
 		$this->copyImages = $copyImages;
 		$this->userDefaultPassword = 'password';
+
+		$this->$secondsBeforeTimeout = $secondsBeforeTimeout;
 
 		$this->saveAuthors();
 		$this->saveCategories();
@@ -121,6 +125,7 @@ class WordpressImport
 			$image = isset($this->attachments[(string)$wpData->post_id]) ? $this->attachments[(string)$wpData->post_id] : '';
 			$dc = $item->children('excerpt', true);
 			$author = NULL;
+			$slug = (string)$wpData->post_name;
 
 			if(isset($dc->creator)){
 				$author = (string)$dc->creator;
@@ -136,12 +141,18 @@ class WordpressImport
 				if(isset($wpData->status) && $wpData->status != 'publish'){
 					$status = 'DRAFT';
 				}
+				if(empty($slug)){
+					$slug = 'post-' . (string)$wpData->post_id;
+				}
 			} 
 			elseif ($type == 'page')
 			{
 				$status = 'ACTIVE';
 				if(isset($wpData->status) && $wpData->status != 'publish'){
 					$status = 'INACTIVE';
+				}
+				if(empty($slug)){
+					$slug = 'page-' . (string)$wpData->post_id;
 				}
 			}
 
@@ -161,11 +172,11 @@ class WordpressImport
 						"excerpt"		=> trim((string)$excerpt->encoded, '" \n'),
 						"body"			=> trim((string)$content->encoded, '" \n'),
 						"image"			=> $this->getImage($image),
-						"slug"			=> (string)$wpData->post_name,
+						"slug"			=> $slug,
 						"status"		=> $status,
 						"featured"		=> 0,
-						"created_at"	=> \Carbon\Carbon::parse((string)$item->pubDate),
-						"updated_at"	=> \Carbon\Carbon::parse((string)$item->pubDate),
+						"created_at"	=> \Carbon\Carbon::parse((string)$wpData->post_date),
+						"updated_at"	=> \Carbon\Carbon::parse((string)$wpData->post_date),
 					);
 
 				} 
@@ -178,7 +189,7 @@ class WordpressImport
 						"excerpt"		=> trim((string)$excerpt->encoded, '" \n'),
 						"body"			=> trim((string)$content->encoded, '" \n'),
 						"image"			=> $this->getImage($image),
-						"slug"			=> (string)$wpData->post_name,
+						"slug"			=> $slug,
 						"status"		=> $status,
 						"created_at"	=> \Carbon\Carbon::parse((string)$item->pubDate),
 						"updated_at"	=> \Carbon\Carbon::parse((string)$item->pubDate),
