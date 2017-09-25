@@ -43,6 +43,8 @@ class ImportController extends BaseController
 				$xml_file = Storage::disk(config('voyager.storage.disk'))->url($folder . '/wordpress-import.xml');
 				$wp = new WordpressImport($xml_file, $copyImages, $timeout);
 
+				Storage::disk(config('voyager.storage.disk'))->deleteDirectory($folder);
+
 				return redirect()->back()->with([
                     'message'    => 'Successfully Imported your WordPress Posts, Pages, Categories, and Users!',
                     'alert-type' => 'success',
