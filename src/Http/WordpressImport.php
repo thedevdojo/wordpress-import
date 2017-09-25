@@ -213,7 +213,7 @@ class WordpressImport
 	                $constraint->aspectRatio();
 	                $constraint->upsize();
 	            })->encode(pathinfo($image, PATHINFO_EXTENSION), 75);
-			Storage::disk(config('voyager.storage.disk'))->put($path.$filename, (string) $img, 'public');
+			\Storage::disk(config('voyager.storage.disk'))->put($path.$filename, (string) $img, 'public');
 		
 			$image = $path.$filename;
 
