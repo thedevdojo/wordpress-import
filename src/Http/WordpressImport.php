@@ -123,7 +123,7 @@ class WordpressImport
 			$excerpt = $item->children('excerpt', true);
 			$category = NULL;
 			$image = isset($this->attachments[(string)$wpData->post_id]) ? $this->attachments[(string)$wpData->post_id] : '';
-			$dc = $item->children('excerpt', true);
+			$dc = $item->children('dc', true);
 			$author = NULL;
 			$slug = (string)$wpData->post_name;
 
