@@ -282,7 +282,7 @@ class WordpressImport
 		$pee = preg_replace('!<p>\s*(</?' . $allblocks . '[^>]*>)!', "$1", $pee);
 		$pee = preg_replace('!(</?' . $allblocks . '[^>]*>)\s*</p>!', "$1", $pee);
 		if ( $br ) {
-			$pee = preg_replace_callback('/<(script|style).*?<\/\\1>/s', create_function('$matches', 'return str_replace("\n", "<PreserveNewline />", $matches[0]);'), $pee);
+			$pee = preg_replace_callback('/<(script|style).*?<\/\\1>/s', function($matches){return str_replace("\n", "<PreserveNewline />", $matches[0]);}, $pee);
 			$pee = preg_replace('|(?<!<br />)\s*\n|', "<br />\n", $pee); // optionally make line breaks
 			$pee = str_replace('<PreserveNewline />', "\n", $pee);
 		}
