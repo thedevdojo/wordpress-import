@@ -33,7 +33,7 @@
                         <p>Upload your Wordpress XML export file below and click on Import</p>
                         <hr>
 
-                        <form method="POST" action="/{{ config('voyager.prefix') . '/wordpress-import' }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('voyager.dashboard') . '/wordpress-import' }}" enctype="multipart/form-data">
                             <label for="copyimages" data-toggle="tooltip" title="Featured images for posts and pages will be copied over to your storage. If you select 'No' the image references will remain the same and no images will be copied." data-placement="right">Copy Images? <i class="voyager-info-circled"></i></label><br>
                             <input type="checkbox" name="copyimages" class="toggleswitch"
                                 data-on="Yes" checked="checked"
